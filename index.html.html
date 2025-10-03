@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal World</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#0b0b0b;color:#fff}
+    header{padding:20px;text-align:center;background:linear-gradient(90deg,#ffcf2e,#ffb600);color:#111}
+    header h1{margin:0;font-size:32px;font-weight:800}
+    header p{margin:5px 0 0;font-size:14px;color:#222}
+    .controls{display:flex;justify-content:center;align-items:center;gap:10px;padding:20px}
+    input{padding:10px;font-size:16px;width:250px;border-radius:8px;border:1px solid #444;background:#111;color:#fff}
+    button{padding:10px 14px;background:#ffcf2e;color:#111;font-weight:700;border:none;border-radius:8px;cursor:pointer}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px;padding:20px;max-width:1200px;margin:auto}
+    .card{background:#111;border:1px solid #222;border-radius:12px;text-align:center;padding:15px;transition:transform .2s}
+    .card:hover{transform:translateY(-6px);background:#181818}
+    .card img{width:40px;height:40px;object-fit:contain;margin-bottom:8px}
+    .card h3{font-size:13px;margin:0;color:#ddd}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌍 Portal World</h1>
+    <p>Sab websites ek hi jaga!</p>
+  </header>
+
+  <div class="controls">
+    <input id="search" placeholder="Type or Speak (e.g. YouTube)">
+    <button onclick="startVoice()">🎤 Speak</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const sites = [
+      {name:"Google",url:"https://google.com"},
+      {name:"YouTube",url:"https://youtube.com"},
+      {name:"Facebook",url:"https://facebook.com"},
+      {name:"Wikipedia",url:"https://wikipedia.org"},
+      {name:"Instagram",url:"https://instagram.com"},
+      {name:"Bing",url:"https://bing.com"},
+      {name:"Reddit",url:"https://reddit.com"},
+      {name:"X.com",url:"https://x.com"},
+      {name:"ChatGPT",url:"https://chat.openai.com"},
+      {name:"Yandex",url:"https://yandex.ru"},
+      {name:"WhatsApp",url:"https://web.whatsapp.com"},
+      {name:"Amazon",url:"https://amazon.com"},
+      {name:"Yahoo",url:"https://yahoo.com"},
+      {name:"Yahoo Japan",url:"https://yahoo.co.jp"},
+      {name:"Weather",url:"https://weather.com"},
+      {name:"DuckDuckGo",url:"https://duckduckgo.com"},
+      {name:"TikTok",url:"https://tiktok.com"},
+      {name:"Temu",url:"https://temu.com"},
+      {name:"Naver",url:"https://naver.com"},
+      {name:"Microsoft Online",url:"https://microsoftonline.com"},
+      {name:"Twitch",url:"https://twitch.tv"},
+      {name:"Twitter",url:"https://twitter.com"},
+      {name:"LinkedIn",url:"https://linkedin.com"},
+      {name:"Live.com",url:"https://live.com"},
+      {name:"Fandom",url:"https://fandom.com"},
+      {name:"Microsoft",url:"https://microsoft.com"},
+      {name:"MSN",url:"https://msn.com"},
+      {name:"Netflix",url:"https://netflix.com"},
+      {name:"Office",url:"https://office.com"},
+      {name:"Pinterest",url:"https://pinterest.com"},
+      {name:"Mail.ru",url:"https://mail.ru"},
+      {name:"OpenAI",url:"https://openai.com"},
+      {name:"AliExpress",url:"https://aliexpress.com"},
+      {name:"PayPal",url:"https://paypal.com"},
+      {name:"VK",url:"https://vk.com"},
+      {name:"Canva",url:"https://canva.com"},
+      {name:"GitHub",url:"https://github.com"},
+      {name:"Spotify",url:"https://spotify.com"},
+      {name:"Discord",url:"https://discord.com"},
+      {name:"Apple",url:"https://apple.com"},
+      {name:"IMDb",url:"https://imdb.com"},
+      {name:"Globo",url:"https://globo.com"},
+      {name:"Roblox",url:"https://roblox.com"},
+      {name:"Amazon Japan",url:"https://amazon.co.jp"},
+      {name:"Quora",url:"https://quora.com"},
+      {name:"Bilibili",url:"https://bilibili.com"},
+      {name:"Samsung",url:"https://samsung.com"},
+      {name:"eBay",url:"https://ebay.com"},
+      {name:"New York Times",url:"https://nytimes.com"},
+      {name:"Walmart",url:"https://walmart.com"},
+      {name:"Amazon Germany",url:"https://amazon.de"},
+      {name:"ESPN",url:"https://espn.com"},
+      {name:"Dailymotion",url:"https://dailymotion.com"},
+      {name:"Google Brazil",url:"https://google.com.br"},
+      {name:"BBC",url:"https://bbc.com"},
+      {name:"Rakuten Japan",url:"https://rakuten.co.jp"},
+      {name:"BBC UK",url:"https://bbc.co.uk"},
+      {name:"Telegram",url:"https://telegram.org"},
+      {name:"Indeed",url:"https://indeed.com"},
+      {name:"CNN",url:"https://cnn.com"},
+      {name:"Dzen.ru",url:"https://dzen.ru"},
+      {name:"Booking",url:"https://booking.com"},
+      {name:"Google UK",url:"https://google.co.uk"},
+      {name:"USPS",url:"https://usps.com"},
+      {name:"Zoom",url:"https://zoom.us"},
+      {name:"Amazon UK",url:"https://amazon.co.uk"},
+      {name:"Adobe",url:"https://adobe.com"},
+      {name:"UOL",url:"https://uol.com.br"},
+      {name:"Etsy",url:"https://etsy.com"},
+      {name:"Steam",url:"https://store.steampowered.com"},
+      {name:"Marca",url:"https://marca.com"},
+      {name:"Ozon.ru",url:"https://ozon.ru"},
+      {name:"Cricbuzz",url:"https://cricbuzz.com"},
+      {name:"Prime Video",url:"https://primevideo.com"},
+      {name:"Google Germany",url:"https://google.de"},
+      {name:"AccuWeather",url:"https://accuweather.com"},
+      {name:"Rutube",url:"https://rutube.ru"},
+      {name:"Instructure",url:"https://instructure.com"},
+      {name:"Disney+",url:"https://disneyplus.com"},
+      {name:"The Guardian",url:"https://theguardian.com"},
+      {name:"Infobae",url:"https://infobae.com"},
+      {name:"Google Spain",url:"https://google.es"},
+      {name:"Google Italy",url:"https://google.it"},
+      {name:"Ya.ru",url:"https://ya.ru"},
+      {name:"Ecosia",url:"https://ecosia.org"},
+      {name:"Daily Mail",url:"https://dailymail.co.uk"},
+      {name:"Amazon India",url:"https://amazon.in"},
+      {name:"Google Japan",url:"https://google.co.jp"},
+      {name:"Amazon Italy",url:"https://amazon.it"},
+      {name:"Google France",url:"https://google.fr"},
+      {name:"IKEA",url:"https://ikea.com"},
+      {name:"Google India",url:"https://google.co.in"},
+      {name:"Fox News",url:"https://foxnews.com"},
+      {name:"Amazon France",url:"https://amazon.fr"},
+      {name:"Max",url:"https://max.com"},
+      {name:"Google Canada",url:"https://google.ca"},
+      {name:"iLovePDF",url:"https://ilovepdf.com"},
+      {name:"Avito",url:"https://avito.ru"},
+      {name:"Outlook",url:"https://outlook.com"},
+      {name:"Wildberries",url:"https://wildberries.ru"}
+    ];
+
+    const grid=document.getElementById("grid");
+    sites.forEach(s=>{
+      const div=document.createElement("div");
+      div.className="card";
+      div.innerHTML=`
+        <img src="https://logo.clearbit.com/${new URL(s.url).hostname}" alt="${s.name}">
+        <h3>${s.name}</h3>
+      `;
+      div.onclick=()=>window.open(s.url,"_blank");
+      grid.appendChild(div);
+    });
+
+    // Voice Recognition
+    function startVoice(){
+      const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+      if(!SpeechRecognition){alert("Speech recognition not supported");return;}
+      const recog=new SpeechRecognition();
+      recog.lang="en-US"; 
+      recog.start();
+      recog.onresult=function(e){
+        const said=e.results[0][0].transcript.toLowerCase();
+        document.getElementById("search").value=said;
+        const match=sites.find(s=>said.includes(s.name.toLowerCase().split(" ")[0]));
+        if(match) window.open(match.url,"_blank");
+        else alert("No match found for: "+said);
+      };
+    }
+  </script>
+</body>
+</html>
